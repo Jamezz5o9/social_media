@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${USERNAME}
+    password: ${PASSWORD}
+    driver-class-name: ${DATA_SOURCE}
+  jpa:
+    open-in-view: false
+    database: postgresql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        ddl-auto: create-drop
+    show-sql: true
+  application:
+    name: social_media
+
+app:
+  auth:
+    token-secret: 04ca023b39512e46d0c2cf4b48d5aac61d343848vvc87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
+    token-expiration: 864000000
+AES_ALGORITHM: ${ALGORITHM:AES}
+ENCRYPTION_KEY: ${KEY:my2243VeryLOnd2343EncryptionKey2}
+#ACCOUNT_SID: ${SID:AC3049bc2ab23803e11743ee515ff89793}
+#AUTH_TOKEN: ${TOKEN:3d10185ddd378af194635302f3c12ff6}
+
+
+
+server:
+  port: 9000
+
