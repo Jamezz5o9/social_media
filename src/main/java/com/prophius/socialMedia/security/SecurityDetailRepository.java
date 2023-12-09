@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface SecurityDetailRepository extends JpaRepository<SecurityDetail, Long> {
     @Query("select sd from SecurityDetail sd JOIN sd.user u where u.id = :userId")
-    List<SecurityDetail> findByUserId(Long userId);
+    List<SecurityDetail> findByUserId(String userId);
     Optional<SecurityDetail> findSecurityDetailByToken(String token);
 }

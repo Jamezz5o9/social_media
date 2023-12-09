@@ -3,13 +3,21 @@ package com.prophius.socialMedia.user;
 import com.prophius.socialMedia.exception.GenericException;
 import com.prophius.socialMedia.mailService.EmailService;
 import com.prophius.socialMedia.notification.NotificationRequest;
+import com.prophius.socialMedia.security.JwtService;
+import com.prophius.socialMedia.security.SecurityDetail;
+import com.prophius.socialMedia.security.SecurityDetailService;
 import com.prophius.socialMedia.token.Token;
 import com.prophius.socialMedia.token.TokenRepository;
 import com.prophius.socialMedia.user.dto.AppUserRegistrationDTO;
 import com.prophius.socialMedia.user.dto.LoginRequestDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDateTime;
@@ -29,6 +37,9 @@ public class AuthServiceImpl implements AuthService {
     private final AppUserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityDetailService securityDetailService;
+    private final JwtService jwtService;
 
     @Override
     public AppUser registerNewUser(AppUserRegistrationDTO userRegistrationRequest) {
@@ -49,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         return userRepository.save(user);
     }
-
+    @Override
     public void followUser(String userId, String followUserId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<AppUser> followUserOpt = userRepository.findById(followUserId);
@@ -63,12 +74,10 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(user);
             userRepository.save(followUser);
-        } else {
-            // Handle the case where one or both users are not found
-            throw new GenericException("User not found");
-        }
-    }
+        } else throw new GenericException("User not found");
 
+    }
+    @Override
     public void unfollowUser(String userId, String unfollowUserId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<AppUser> unfollowUserOpt = userRepository.findById(unfollowUserId);
@@ -82,10 +91,8 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(user);
             userRepository.save(unfollowUser);
-        } else {
-            // Handle the case where one or both users are not found
-            throw new GenericException("User not found");
-        }
+        } else throw new GenericException("User not found");
+
 
 }
 
@@ -144,9 +151,42 @@ public class AuthServiceImpl implements AuthService {
         return tokenRepository.save(verificationToken);
     }
 
+    @Transactional
     @Override
-    public String login(LoginRequestDTO loginRequestDTO) {
-        return null;
+    public String login(LoginRequestDTO loginRequest)  {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        AppUser user = findUserByEmail(loginRequest.getEmail());
+        String jwtToken = jwtService.generateToken(user.getEmail());
+        revokeAllUserToken(user.getId());
+        saveToken(jwtToken, user);
+
+        return "Login successfully";
+    }
+
+    private void saveToken(String jwt, AppUser user) {
+        SecurityDetail securityDetail = new SecurityDetail();
+        securityDetail.setToken(jwt);
+        securityDetail.setExpired(false);
+        securityDetail.setRevoked(false);
+        securityDetail.setUser(user);
+        securityDetailService.save(securityDetail);
+    }
+
+    private void revokeAllUserToken(String userId) {
+        var allUsersToken = securityDetailService.findSecurityDetailByUserId(userId);
+        if (allUsersToken.isEmpty()) return;
+        allUsersToken
+                .forEach(securityDetail -> {
+                    securityDetail.setRevoked(true);
+                    securityDetail.setExpired(true);
+                    securityDetailService.save(securityDetail);
+                });
     }
 
     @Override

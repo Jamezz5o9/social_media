@@ -8,6 +8,11 @@ import java.util.Optional;
 
 public interface AuthService {
     AppUser registerNewUser(AppUserRegistrationDTO userRegistrationRequest);
+
+    void followUser(String userId, String followUserId);
+
+    void unfollowUser(String userId, String unfollowUserId);
+
     void confirmVerificationToken(String verificationToken);
     Token createVerificationToken(AppUser user, String tokenType);
     String login(LoginRequestDTO loginRequestDTO);

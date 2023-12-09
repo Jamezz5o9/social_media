@@ -10,7 +10,7 @@ import java.util.List;
 public class SecurityDetailService {
     private final SecurityDetailRepository securityDetailRepository;
 
-    public List<SecurityDetail> findSecurityDetailByUserId(Long userId){
+    public List<SecurityDetail> findSecurityDetailByUserId(String userId){
         return securityDetailRepository
                 .findByUserId(userId);
     }

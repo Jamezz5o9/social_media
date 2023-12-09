@@ -1,6 +1,7 @@
 package com.prophius.socialMedia.user;
 
 import com.prophius.socialMedia.exception.ApiResponse;
+import com.prophius.socialMedia.exception.GenericException;
 import com.prophius.socialMedia.mailService.EmailService;
 import com.prophius.socialMedia.notification.NotificationRequest;
 import com.prophius.socialMedia.token.Token;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,26 @@ public class AppUserController {
         return new ResponseEntity<>(new ApiResponse
                 (true, "Registration Successful and Pending verification, " +
                         "Please check your email for activation Link"), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{userId}/follow/{followUserId}")
+    public ResponseEntity<?> followUser(@PathVariable String userId, @PathVariable String followUserId) {
+        try {
+            authService.followUser(userId, followUserId);
+            return ResponseEntity.ok().build();
+        } catch (GenericException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{userId}/unfollow/{unfollowUserId}")
+    public ResponseEntity<?> unfollowUser(@PathVariable String userId, @PathVariable String unfollowUserId) {
+        try {
+            authService.unfollowUser(userId, unfollowUserId);
+            return ResponseEntity.ok().build();
+        } catch (GenericException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     private void sendVerificationEmail(String email, String name, String verificationLink) {
         NotificationRequest request = new NotificationRequest();
