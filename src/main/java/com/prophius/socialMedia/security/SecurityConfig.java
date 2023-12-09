@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers(AUTH_WHITELIST).permitAll()
-                                .requestMatchers("/api/v1/role/**").hasAuthority("USER")
+                                .requestMatchers("/api/v1/role/**").hasAuthority("SUPER_ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .logout(logout ->
                         logout
-                                .logoutUrl("/auth/taskspace/logout")
+                                .logoutUrl("/auth/socialspace/logout")
                                 .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) -> {
                                     SecurityContextHolder.clearContext();

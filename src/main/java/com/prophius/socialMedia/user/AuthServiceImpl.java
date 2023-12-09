@@ -60,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         return userRepository.save(user);
     }
+    @Transactional
     @Override
     public void followUser(String userId, String followUserId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
@@ -77,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
         } else throw new GenericException("User not found");
 
     }
+    @Transactional
     @Override
     public void unfollowUser(String userId, String unfollowUserId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
@@ -154,6 +156,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public String login(LoginRequestDTO loginRequest)  {
+        
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
