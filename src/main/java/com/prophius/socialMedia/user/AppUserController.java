@@ -6,20 +6,17 @@ import com.prophius.socialMedia.mailService.EmailService;
 import com.prophius.socialMedia.notification.NotificationRequest;
 import com.prophius.socialMedia.token.Token;
 import com.prophius.socialMedia.user.dto.AppUserRegistrationDTO;
+import com.prophius.socialMedia.user.dto.LoginRequestDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.context.Context;
 
 import static com.prophius.socialMedia.token.TokenType.VERIFICATION;
 import static com.prophius.socialMedia.utils.ConstantUtils.SOCIAL_SPACE_EMAIL;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RequiredArgsConstructor
 @RequestMapping("api/v1/user")
@@ -35,6 +32,18 @@ public class AppUserController {
         return new ResponseEntity<>(new ApiResponse
                 (true, "Registration Successful and Pending verification, " +
                         "Please check your email for activation Link"), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
+        return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<ApiResponse> verifyUser(@RequestParam("token") String token) {
+        authService.confirmVerificationToken(token);
+        return new ResponseEntity<>(new ApiResponse
+                (true, "User is successfully verified, Please Login to Continue"), HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/follow/{followUserId}")
