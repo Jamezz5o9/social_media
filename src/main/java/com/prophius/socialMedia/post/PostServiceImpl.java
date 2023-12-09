@@ -40,6 +40,7 @@ public class PostServiceImpl implements PostService {
         if (userOpt.isPresent() && postOpt.isPresent()) {
             Post post = postOpt.get();
             post.getLikedBy().add(userOpt.get());
+            post.setLikesCount(post.getLikesCount() + 1);
 
             postRepository.save(post);
         } else throw new GenericException("Post not found");
@@ -52,6 +53,7 @@ public class PostServiceImpl implements PostService {
 
         if (userOpt.isPresent() && postOpt.isPresent()) {
             Post post = postOpt.get();
+            post.setLikesCount(post.getLikesCount() - 1);
             post.getLikedBy().remove(userOpt.get());
 
             postRepository.save(post);
