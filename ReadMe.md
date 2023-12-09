@@ -93,12 +93,12 @@ To get started with Social space, you will need to clone this repository to your
 ## Swagger Authentication Endpoints
 
    ```bash
-     (Swagger) http://localhost:8080/swagger-ui/index.html#
+     (Swagger) http://localhost:9000/swagger-ui/index.html#
      
      The above Url routes to the swagger UI for testing.
      The Authentication groups relates to Registering with Email, Password and name
      The Social space group relates to the Basic CRUD operations for the case study
-     http://localhost:8080/?token={token}
+     http://localhost:9000/?token={token}
    ```
 
 ## Functional requirement
