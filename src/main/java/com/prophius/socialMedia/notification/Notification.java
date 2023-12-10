@@ -17,10 +17,8 @@ import org.hibernate.annotations.GenericGenerator;
 public class Notification extends DateAudit {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "uuid", insertable = false, updatable = false, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String type;
 

@@ -18,12 +18,11 @@ import java.time.LocalDateTime;
 public class Comment extends DateAudit {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "uuid", insertable = false, updatable = false, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String content;
+
     private LocalDateTime creationDate;
 
     @ManyToOne

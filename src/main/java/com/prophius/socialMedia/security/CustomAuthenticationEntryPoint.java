@@ -18,22 +18,18 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException authException){
+            AuthenticationException authException) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
-
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> data = new HashMap<>();
-
         data.put("Status", false);
-        data.put("Message", authException.getMessage());
-        try {
-            response.getOutputStream().print(objectMapper.writeValueAsString(data));
-        } catch (IOException e) {
-            throw new GenericException(e.getMessage());
-        }
+        data.put("Message", "Authentication is required to access this resource.");
 
+        response.getOutputStream().print(objectMapper.writeValueAsString(data));
+        response.getOutputStream().flush();
     }
 }
+

@@ -23,15 +23,18 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         ObjectMapper objectMapper = new ObjectMapper();
         response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
         Map<String, Object> data = new HashMap<>();
         data.put("Status", false);
-        data.put("Message", accessDeniedException.getMessage());
+        data.put("Message", "You do not have permission to access this resource.");
+
         try {
             response.getOutputStream().print(objectMapper.writeValueAsString(data));
         } catch (IOException e) {
-            throw new GenericException(e.getMessage());
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
     }
 }
+

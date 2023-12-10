@@ -5,8 +5,8 @@ import com.prophius.socialMedia.user.AppUser;
 import com.prophius.socialMedia.user.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -17,8 +17,8 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private AppUserRepository userRepository;
-
-    public Post createPost(String userId, String content) {
+    @Transactional
+    public PostDTO createPost(Long userId, String content) {
 
         Optional<AppUser> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) throw new GenericException("User not found with id: " + userId);
@@ -26,14 +26,20 @@ public class PostServiceImpl implements PostService {
 
         Post newPost = new Post();
         newPost.setContent(content);
-        newPost.setCreationDate(LocalDateTime.now());
         newPost.setUser(userOpt.get());
         newPost.setLikesCount(0);
 
-        return postRepository.save(newPost);
+        Post savedPost = postRepository.save(newPost);
+
+        PostDTO postDTO = new PostDTO();
+        postDTO.setId(savedPost.getId());
+        postDTO.setContent(savedPost.getContent());
+        postDTO.setLikesCount(savedPost.getLikesCount());
+
+        return postDTO;
     }
 
-    public void likePost(String userId, String postId) {
+    public void likePost(Long userId, Long postId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<Post> postOpt = postRepository.findById(postId);
 
@@ -47,7 +53,7 @@ public class PostServiceImpl implements PostService {
 
     }
 
-    public void unlikePost(String userId, String postId) {
+    public void unlikePost(Long userId, Long postId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<Post> postOpt = postRepository.findById(postId);
 

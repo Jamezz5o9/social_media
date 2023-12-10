@@ -33,8 +33,8 @@ public class PostController {
         }
     }
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody CreatePostRequest createPostRequest) {
-        Post post = postService.createPost(createPostRequest.getUserId(), createPostRequest.getContent());
+    public ResponseEntity<?> createPost(@RequestBody CreatePostRequest createPostRequest) {
+        PostDTO post = postService.createPost(createPostRequest.getUserId(), createPostRequest.getContent());
         return new ResponseEntity<>(post, HttpStatus.CREATED);
     }
 }

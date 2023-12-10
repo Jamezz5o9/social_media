@@ -1,7 +1,6 @@
 package com.prophius.socialMedia.security;
 
 import com.prophius.socialMedia.user.AppUser;
-import com.prophius.socialMedia.user.AuthService;
 import com.prophius.socialMedia.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +22,6 @@ public class SecuredUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser user = userService.findByEmailIgnoreCase(email).orElseThrow(
                 () -> new UsernameNotFoundException(format("User not found with email %s", email)));
-        return UserPrincipal.create(user);
+        return new SecuredUser(user);
     }
 }

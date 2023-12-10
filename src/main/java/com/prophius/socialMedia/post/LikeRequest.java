@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class LikeRequest {
-    private String userId;
-    private String postId;
+    private Long userId;
+    private Long postId;
 
 }

@@ -1,7 +1,7 @@
 package com.prophius.socialMedia.post;
 
 public interface PostService {
-    Post createPost(String userId, String content);
-    void likePost(String userId, String postId);
-    public void unlikePost(String userId, String postId);
+    PostDTO createPost(Long userId, String content);
+    void likePost(Long userId, Long postId);
+    public void unlikePost(Long userId, Long postId);
 }

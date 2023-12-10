@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: ${DATABASE_URL}
-    username: ${USERNAME}
-    password: ${PASSWORD}
-    driver-class-name: ${DATA_SOURCE}
+    url: jdbc:postgresql://localhost:5432/social_media?currentSchema=sc_social_media
+    username: jaime
+    password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
     database: postgresql
@@ -11,10 +11,18 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        ddl-auto: create-drop
+        ddl-auto: create
     show-sql: true
   application:
     name: social_media
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE
+
 
 app:
   auth:
@@ -25,8 +33,5 @@ ENCRYPTION_KEY: ${KEY:my2243VeryLOnd2343EncryptionKey2}
 #ACCOUNT_SID: ${SID:AC3049bc2ab23803e11743ee515ff89793}
 #AUTH_TOKEN: ${TOKEN:3d10185ddd378af194635302f3c12ff6}
 
-
-
 server:
   port: 9000
-

@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface AppUserRepository extends JpaRepository<AppUser, String> {
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
-    @Query("SELECT u FROM app_user u WHERE LOWER(u.email) = LOWER(:email)")
+    @Query("SELECT u FROM AppUser u WHERE LOWER(u.email) = LOWER(:email)")
     Optional<AppUser> findByEmailIgnoreCase(String email);
 
 }

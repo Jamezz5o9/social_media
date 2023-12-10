@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService{
+
     @Autowired
     private CommentRepository commentRepository;
 
@@ -22,7 +23,7 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     private AppUserRepository userRepository;
 
-    public Comment addCommentToPost(String userId, String postId, String content) {
+    public Comment addCommentToPost(Long userId, Long postId, String content) {
 
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<Post> postOpt = postRepository.findById(postId);

@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     }
     @Transactional
     @Override
-    public void followUser(String userId, String followUserId) {
+    public void followUser(Long userId, Long followUserId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<AppUser> followUserOpt = userRepository.findById(followUserId);
 
@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
     }
     @Transactional
     @Override
-    public void unfollowUser(String userId, String unfollowUserId) {
+    public void unfollowUser(Long userId, Long unfollowUserId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<AppUser> unfollowUserOpt = userRepository.findById(unfollowUserId);
 
@@ -155,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public String login(LoginRequestDTO loginRequest)  {
+    public Map<String, Object> login(LoginRequestDTO loginRequest)  {
         
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -169,7 +169,13 @@ public class AuthServiceImpl implements AuthService {
         revokeAllUserToken(user.getId());
         saveToken(jwtToken, user);
 
-        return "Login successfully";
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("token", jwtToken);
+        result.put("message", "Login successful");
+        result.put("status", "200");
+
+        return result;
     }
 
     private void saveToken(String jwt, AppUser user) {
@@ -181,7 +187,7 @@ public class AuthServiceImpl implements AuthService {
         securityDetailService.save(securityDetail);
     }
 
-    private void revokeAllUserToken(String userId) {
+    private void revokeAllUserToken(Long userId) {
         var allUsersToken = securityDetailService.findSecurityDetailByUserId(userId);
         if (allUsersToken.isEmpty()) return;
         allUsersToken

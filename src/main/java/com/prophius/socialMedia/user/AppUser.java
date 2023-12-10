@@ -12,14 +12,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Builder
-@Entity(name = "app_user")
+@Entity
 public class AppUser extends DateAudit {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "uuid", insertable = false, updatable = false, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(unique = true)
     private String email;
@@ -30,11 +28,22 @@ public class AppUser extends DateAudit {
     private String profilePictureUrl;
 
     @ManyToMany
+    @JoinTable(
+            name = "app_user_followers",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id")
+    )
     private Set<AppUser> followers;
 
     @ManyToMany
+    @JoinTable(
+            name = "app_user_following",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
     private Set<AppUser> following;
 
     private boolean isVerified;
+
     private String role;
 }

@@ -17,12 +17,13 @@ import org.thymeleaf.context.Context;
 
 import static com.prophius.socialMedia.token.TokenType.VERIFICATION;
 import static com.prophius.socialMedia.utils.ConstantUtils.SOCIAL_SPACE_EMAIL;
-
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("api/v1/user")
 public class AppUserController {
 
     private final AuthService authService;
+
     private final EmailService emailService;
 
     @PostMapping("/register")
@@ -47,7 +48,7 @@ public class AppUserController {
     }
 
     @PostMapping("/{userId}/follow/{followUserId}")
-    public ResponseEntity<?> followUser(@PathVariable String userId, @PathVariable String followUserId) {
+    public ResponseEntity<?> followUser(@PathVariable Long userId, @PathVariable Long followUserId) {
         try {
             authService.followUser(userId, followUserId);
             return ResponseEntity.ok().build();
@@ -57,7 +58,7 @@ public class AppUserController {
     }
 
     @PostMapping("/{userId}/unfollow/{unfollowUserId}")
-    public ResponseEntity<?> unfollowUser(@PathVariable String userId, @PathVariable String unfollowUserId) {
+    public ResponseEntity<?> unfollowUser(@PathVariable Long userId, @PathVariable Long unfollowUserId) {
         try {
             authService.unfollowUser(userId, unfollowUserId);
             return ResponseEntity.ok().build();
@@ -81,7 +82,8 @@ public class AppUserController {
     private void generateVerificationToken(AppUser user) {
         Token token = authService.createVerificationToken(user, VERIFICATION.toString());
         String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
-        String verificationUrl = baseUrl + "/verify?token=" + token.getToken();
+        String verificationUrl = baseUrl + "/api/v1/user/verify?token=" + token.getToken();
         sendVerificationEmail(user.getEmail(), user.getFirstName(), verificationUrl);
     }
 }
+
