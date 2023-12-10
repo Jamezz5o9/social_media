@@ -8,10 +8,11 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 
-@EqualsAndHashCode(callSuper = true)
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 public class Notification extends DateAudit {

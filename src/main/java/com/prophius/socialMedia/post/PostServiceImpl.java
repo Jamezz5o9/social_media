@@ -38,7 +38,7 @@ public class PostServiceImpl implements PostService {
 
         return postDTO;
     }
-
+    @Transactional
     public void likePost(Long userId, Long postId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<Post> postOpt = postRepository.findById(postId);
@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
         } else throw new GenericException("Post not found");
 
     }
-
+    @Transactional
     public void unlikePost(Long userId, Long postId) {
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<Post> postOpt = postRepository.findById(postId);

@@ -3,14 +3,15 @@ package com.prophius.socialMedia.user;
 import com.prophius.socialMedia.audit.DateAudit;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
+import java.util.Objects;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Entity
 public class AppUser extends DateAudit {

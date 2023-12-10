@@ -23,8 +23,6 @@ public class Comment extends DateAudit {
 
     private String content;
 
-    private LocalDateTime creationDate;
-
     @ManyToOne
     private AppUser user;
 

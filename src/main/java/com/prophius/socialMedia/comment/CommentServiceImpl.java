@@ -8,7 +8,6 @@ import com.prophius.socialMedia.user.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -23,7 +22,7 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     private AppUserRepository userRepository;
 
-    public Comment addCommentToPost(Long userId, Long postId, String content) {
+    public CommentDTO addCommentToPost(Long userId, Long postId, String content) {
 
         Optional<AppUser> userOpt = userRepository.findById(userId);
         Optional<Post> postOpt = postRepository.findById(postId);
@@ -38,11 +37,16 @@ public class CommentServiceImpl implements CommentService{
 
         Comment newComment = Comment.builder()
                 .content(content)
-                .creationDate(LocalDateTime.now())
                 .user(userOpt.get())
                 .post(postOpt.get())
                 .build();
 
-        return commentRepository.save(newComment);
+        Comment savedComment = commentRepository.save(newComment);
+
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setId(savedComment.getId());
+        commentDTO.setContent(savedComment.getContent());
+
+        return commentDTO;
     }
 }

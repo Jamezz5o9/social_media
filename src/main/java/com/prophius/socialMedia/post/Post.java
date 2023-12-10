@@ -32,5 +32,11 @@ public class Post extends DateAudit {
     private Set<Comment> comments;
 
     @ManyToMany
+    @JoinTable(
+            name = "post_likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<AppUser> likedBy;
+
 }
